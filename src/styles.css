@@ -130,12 +130,12 @@ button:active {
 }
 
 .btn-png {
-  background: #4ecdc4 !important;
-  color: white !important;
+  background: #4ecdc4;
+  color: white;
 }
 
 .btn-png:hover {
-  background: #45b7b9 !important;
+  background: #45b7b9;
 }
 
 .info {
@@ -159,7 +159,6 @@ button:active {
   color: #4ecdc4;
 }
 
-/* Для планшетов и небольших экранов - делаем канвасы меньше, но все еще в ряд */
 @media (max-width: 1024px) {
   .canvas-wrapper canvas {
     width: 380px;
@@ -167,10 +166,8 @@ button:active {
   }
 }
 
-/* Для мобильных устройств - скролл по горизонтали */
 @media (max-width: 768px) {
   .canvases {
-    /* На мобильных тоже в ряд, но с возможностью скролла */
     overflow-x: auto;
     gap: 15px;
     padding-bottom: 10px;
@@ -195,7 +192,6 @@ button:active {
   }
 }
 
-/* Для очень маленьких экранов */
 @media (max-width: 480px) {
   .canvas-wrapper canvas {
     width: 250px;

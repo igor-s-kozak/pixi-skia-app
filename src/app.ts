@@ -14,6 +14,12 @@ import {
 } from "./config";
 
 const formatDate = (date: Date) =>
+  /*
+    Такой формат нужен, чтобы содержали символ "-" в качестве разделителя 
+    и скачанные pdf адекватно открывались в браузере. 
+    Можно было бы вынести в отдельный файл uthils.ts, 
+    но не стал ради одной утилиты
+  */
   [
     date.getDate(),
     date.getMonth() + 1,
@@ -47,7 +53,7 @@ export class PixiSkiaApp {
       await this.initSkia();
       this.setupUI();
     } catch (error) {
-      console.log("%c", consoleCSSRed);
+      console.log("%c", consoleCSSRed); // нравится такое отображение в консоли
       console.error(error);
       this.updateStatus("Ошибка инициализации приложения");
     }
@@ -101,7 +107,7 @@ export class PixiSkiaApp {
     const g3 = new PIXI.Graphics();
     const g4 = new PIXI.Graphics();
 
-    g1.beginFill("#ff000077").drawEllipse(0, 0, 200, 100).endFill();
+    g1.beginFill("#ff000077").drawEllipse(0, 0, 200, 100).endFill(); // поменял чуть цвет для прозрачности
     g1.position.set(200, 100);
     g1.angle = 30;
     g1.eventMode = "static";

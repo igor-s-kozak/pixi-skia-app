@@ -2,10 +2,16 @@ import * as PIXI from "pixi.js";
 export class EventMapper {
   constructor(private canvasElement: HTMLCanvasElement) {}
 
-  transferMouseData(
+  private transferMouseData(
     event: PIXI.FederatedPointerEvent,
     nativeEvent: MouseEvent,
   ) {
+    /*
+      Метод позаимствован в node_modules/@pixi/events/lib/EventSystem.js 
+      и несколько видоизменен. Да, возможно, копирование и некоторое нарушение принципа 
+      DRY, но оригинальный использовать нет возможности, поскольку он помечен как private
+      и typescript "ругается" при его использовании
+    */
     event.isTrusted = nativeEvent.isTrusted;
     event.timeStamp = performance.now();
     event.type = nativeEvent.type;
