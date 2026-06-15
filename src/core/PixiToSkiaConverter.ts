@@ -1,53 +1,84 @@
-import  * as PIXI from 'pixi.js';
-import type { CanvasKit, Surface, Canvas } from 'canvaskit-wasm';
-import { GraphicsRenderer } from '../renderers/GraphicsRenderer';
-import { SpriteRenderer } from '../renderers/SpriteRenderer';
-import { PDFSurface } from '../types';
+import * as PIXI from "pixi.js";
+import type { Surface, Canvas } from "canvaskit-wasm";
+import { GraphicsRenderer } from "../renderers/GraphicsRenderer";
+import { SpriteRenderer } from "../renderers/SpriteRenderer";
+import { PDFSurface } from "..";
+import { CanvasKitWithMakePDF } from "..";
 
 export class PixiToSkiaConverter {
-  private graphicsRenderer: GraphicsRenderer;
-  private spriteRenderer: SpriteRenderer;
-  private canvasKit: CanvasKit;
-  private canvas: Canvas | null = null;
+  private graphicsRenderer: GraphicsRenderer | null = null;
+  private spriteRenderer: SpriteRenderer | null = null;
+  private canvasKit: CanvasKitWithMakePDF | null = null;
 
-  constructor(canvasKit: CanvasKit) {
-    this.canvasKit = canvasKit;
-    this.graphicsRenderer = new GraphicsRenderer(canvasKit);
-    this.spriteRenderer = new SpriteRenderer(canvasKit);
+  async initCanvasKit(): Promise<void> {
+    if (this.canvasKit) return;
+
+    try {
+      this.canvasKit = await window.CanvasKitInit({
+        locateFile: (file: string) => "/canvaskit/" + file,
+      });
+      this.initRenderers();
+    } catch (error) {
+      console.error("Failed to initialize CanvasKit:", error);
+      throw error;
+    }
   }
 
-  async renderContainer(container: PIXI.Container, surface: Surface | PDFSurface): Promise<void> {
-   
-    
+  createSurface(canvas: HTMLCanvasElement): Surface {
+    if (!this.canvasKit) throw new Error("CanvasKit not initialized");
+
+    const surface = this.canvasKit.MakeCanvasSurface(canvas.id);
+    if (!surface) throw new Error(`Failed to create surface`);
+
+    return surface;
+  }
+
+  getCanvasKit(): CanvasKitWithMakePDF {
+    if (!this.canvasKit) throw new Error("CanvasKit not initialized");
+    return this.canvasKit;
+  }
+
+  initRenderers() {
+    if (!this.canvasKit) return;
+    this.graphicsRenderer = new GraphicsRenderer(this.canvasKit);
+    this.spriteRenderer = new SpriteRenderer(this.canvasKit);
+  }
+
+  async renderContainer(
+    container: PIXI.Container,
+    surface: Surface | PDFSurface,
+  ): Promise<void> {
     const canvas = surface.getCanvas();
-    console.log('surface', surface)
-    // Очищаем белым цветом
-    canvas.clear(this.canvasKit.WHITE);
-    
+
+    canvas.clear(this.canvasKit!.WHITE);
+
     await this.renderDisplayObject(container, canvas);
-    
-    if ('flush' in surface) {
+
+    if ("flush" in surface) {
       surface.flush();
     }
   }
 
   private async renderDisplayObject(
-    obj: PIXI.DisplayObject, 
+    obj: PIXI.DisplayObject,
     canvas: Canvas,
-    parentTransform?: { x: number; y: number; rotation: number; scaleX: number; scaleY: number }
+    parentTransform?: {
+      x: number;
+      y: number;
+      rotation: number;
+      scaleX: number;
+      scaleY: number;
+    },
   ): Promise<void> {
-    // Вычисляем трансформацию текущего объекта
+    if (!this.graphicsRenderer || !this.spriteRenderer) return;
     const transform = {
       x: obj.position.x,
       y: obj.position.y,
       rotation: obj.angle,
       scaleX: obj.scale.x,
-      scaleY: obj.scale.y
+      scaleY: obj.scale.y,
     };
-    
-    // Комбинируем с родительской трансформацией
 
-    console.log('parent transform', parentTransform)
     if (parentTransform) {
       transform.x += parentTransform.x;
       transform.y += parentTransform.y;
@@ -56,22 +87,14 @@ export class PixiToSkiaConverter {
       transform.scaleY *= parentTransform.scaleY;
     }
 
-    console.log('transform', transform)
-    // Рендерим в зависимости от типа объекта
-    console.log('>>>>>name', obj.constructor.name);
     if (obj instanceof PIXI.Graphics) {
       this.graphicsRenderer.render(obj as PIXI.Graphics, canvas, transform);
     } else if (obj instanceof PIXI.Sprite) {
       await this.spriteRenderer.render(obj as PIXI.Sprite, canvas, transform);
     } else if (obj instanceof PIXI.Container) {
       for (const child of (obj as PIXI.Container).children) {
-        console.log('>>>child', child.constructor.name);
         await this.renderDisplayObject(child, canvas, transform);
       }
     }
-  }
-
-  dispose(): void {
-    this.spriteRenderer.clearCache();
   }
 }

@@ -21,17 +21,3 @@ npm run dev
 ## Сборка
 
 npm run build
-
-## Структура
-
-- src/main.ts — точка входа
-- src/skia-wrapper.ts — обертка для CanvasKit
-- src/scene-manager.ts — менеджер сцен
-- src/events.ts — обработчик событий
-- src/types.ts — типы и интерфейсы
-- src/styles.css — стили
-
-## Экспорт в PDF
-
-Для векторного PDF требуется кастомная сборка CanvasKit с флагом is_pdf=true.
-Стандартная сборка поддерживает только рендер на canvas.

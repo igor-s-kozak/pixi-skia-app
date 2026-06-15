@@ -1,54 +1,15 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pixi Skia App</title>
-    <link rel="icon" type="image/svg+xml" href="/vite.svg">
-</head>
-<body>
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    
+  </head>
+  <body>
     <div id="app"></div>
+    <script src="/canvaskit/canvaskit.js"></script>
     <script type="module" src="/src/main.ts"></script>
-    <!-- <script src="https://unpkg.com/canvaskit-wasm@latest/bin/full/canvaskit.js"></script> -->
-    <script src="/src/canvaskit.js"></script>
-</body>
+  </body>
 </html>
-
-<!-- <!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixi + Skia PDF Export</title>
-    <link rel="stylesheet" href="/src/styles.css">
-</head>
-<body>
-    <div id="app">
-        <header><h1>Pixi.js + Skia (CanvasKit) — Экспорт в PDF</h1></header>
-        <div id="controls">
-            <button id="btn-generate">Сгенерировать случайную фигуру</button>
-            <button id="btn-switch-scene">Переключить сцену</button>
-            <button id="btn-export-pdf">Экспортировать в PDF</button>
-            <button id="btn-clear">Очистить</button>
-            <span id="status">Загрузка...</span>
-        </div>
-        <div id="canvas-container">
-            <div id="pixi-container">
-                <h3>Pixi.js (Canvas)</h3>
-                <div id="pixi-canvas"></div>
-            </div>
-            <div id="skia-container">
-                <h3>Skia (CanvasKit)</h3>
-                <canvas id="skia-canvas" width="800" height="600"></canvas>
-            </div>
-        </div>
-        <div id="info">
-            <p>Сцена: <span id="scene-name">Сцена 1</span></p>
-            <p>Объектов: <span id="object-count">0</span></p>
-            <p id="event-log">События: —</p>
-        </div>
-    </div>
-    <script type="module" src="/src/main.ts"></script>
-    <script src="https://unpkg.com/canvaskit-wasm@latest/bin/canvaskit.js"></script>
-</body>
-</html> -->

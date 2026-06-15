@@ -16,17 +16,15 @@ export class GraphicsRenderer {
     },
   ): void {
     skCanvas.save();
-    // Применяем трансформации
     if (transform) {
       skCanvas.translate(transform.x, transform.y);
-      skCanvas.rotate((transform.rotation * Math.PI) / 180, 0, 0);
+      skCanvas.rotate(transform.rotation, 0, 0);
       skCanvas.scale(transform.scaleX, transform.scaleY);
     }
 
     const graphicsData = graphics.geometry.graphicsData;
 
     for (const data of graphicsData) {
-      // Отрисовка заливки
       if (
         data.fillStyle &&
         data.fillStyle.visible &&
@@ -34,15 +32,11 @@ export class GraphicsRenderer {
       ) {
         const paint = new this.canvasKit.Paint();
         const color = data.fillStyle.color;
-        const r = ((color >> 16) & 0xff) 
-        const g = ((color >> 8) & 0xff) 
-        const b = (color & 0xff) 
-        console.log('color', r, g, b, color)
         paint.setColor(
           this.canvasKit.Color(
-            r,
-            g,
-            b,                      
+            (color >> 16) & 0xff,
+            (color >> 8) & 0xff,
+            color & 0xff,
             data.fillStyle.alpha,
           ),
         );
@@ -53,7 +47,6 @@ export class GraphicsRenderer {
         paint.delete();
       }
 
-      // Отрисовка обводки
       if (
         data.lineStyle &&
         data.lineStyle.visible &&
@@ -63,17 +56,15 @@ export class GraphicsRenderer {
         const color = data.lineStyle.color;
         paint.setColor(
           this.canvasKit.Color(
-            ((color >> 16) & 0xff),
-            ((color >> 8) & 0xff),
-            (color & 0xff),
+            (color >> 16) & 0xff,
+            (color >> 8) & 0xff,
+            color & 0xff,
             data.lineStyle.alpha,
-            
           ),
         );
         paint.setStyle(this.canvasKit.PaintStyle.Stroke);
         paint.setStrokeWidth(data.lineStyle.width);
         paint.setAntiAlias(true);
-        console.log('DATA shape', data.shape);
         this.drawShape(data.shape, skCanvas, paint);
         paint.delete();
       }
@@ -102,23 +93,18 @@ export class GraphicsRenderer {
       );
     } else if (shape.type === PIXI.SHAPES.POLY) {
       if (shape.points && shape.points.length >= 4) {
-        // Используем PathBuilder для создания пути
         const pathBuilder = new this.canvasKit.PathBuilder();
 
-        // Начинаем путь с первой точки
         pathBuilder.moveTo(shape.points[0], shape.points[1]);
 
-        // Добавляем линии к остальным точкам
         for (let i = 2; i < shape.points.length; i += 2) {
           pathBuilder.lineTo(shape.points[i], shape.points[i + 1]);
         }
 
-        // Создаем Path из PathBuilder
         const path = pathBuilder.detach();
 
         canvas.drawPath(path, paint);
 
-        // Очищаем ресурсы
         path.delete();
         pathBuilder.delete();
       }

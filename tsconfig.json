@@ -1,32 +1,3 @@
-// {
-//   "compilerOptions": {
-//     "target": "ES2020",
-//     "useDefineForClassFields": true,
-//     "module": "ESNext",
-//     "lib": ["ES2020", "DOM", "DOM.Iterable"],
-//     "skipLibCheck": true,
-//     "moduleResolution": "bundler",
-//     "allowImportingTsExtensions": true,
-//     "resolveJsonModule": true,
-//     "isolatedModules": true,
-//     "noEmit": true,
-//     "strict": true,
-//     "noUnusedLocals": false,
-//     "noUnusedParameters": false,
-//     "noFallthroughCasesInSwitch": true,
-//     "allowSyntheticDefaultImports": true,
-//     "types": ["node", "canvaskit-wasm"],
-//     "paths": {
-//       "@/*": ["./src/*"],
-//       "@core/*": ["./src/core/*"],
-//       "@renderers/*": ["./src/renderers/*"],
-//       "@events/*": ["./src/events/*"]
-//     }
-//   },
-//   "include": ["src/**/*.ts"],
-//   "exclude": ["node_modules", "dist"]
-// }
-
 {
   "compilerOptions": {
     "target": "ES2020",
@@ -41,7 +12,7 @@
     "strict": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["node", "canvaskit-wasm"],
+    "types": ["node", "canvaskit-wasm", "vite/client"]
   },
-  "include": ["src"]
+  "include": ["src", "public/canvaskit/canvaskit.js"]
 }
