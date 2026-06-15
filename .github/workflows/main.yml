@@ -1,14 +1,11 @@
-name: Deploy Vite App to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches: [ "main" ]
 
-# Важно: добавляем permissions
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
   build-and-deploy:
@@ -17,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Use Node.js
+    - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20.x'
@@ -26,13 +23,36 @@ jobs:
     - name: Install dependencies
       run: npm ci
     
+    # КЛЮЧЕВОЙ ШАГ: Копируем CanvasKit файлы в public
+    - name: Copy CanvasKit files
+      run: |
+        mkdir -p public/canvaskit
+        # Копируем из node_modules в public
+        cp node_modules/canvaskit-wasm/bin/canvaskit.js public/canvaskit/ 2>/dev/null || \
+        cp node_modules/canvaskit-wasm/canvaskit.js public/canvaskit/ 2>/dev/null || \
+        echo "CanvasKit JS not found in node_modules"
+        
+        cp node_modules/canvaskit-wasm/bin/canvaskit.wasm public/canvaskit/ 2>/dev/null || \
+        cp node_modules/canvaskit-wasm/canvaskit.wasm public/canvaskit/ 2>/dev/null || \
+        echo "CanvasKit WASM not found in node_modules"
+        
+        # Проверяем, что файлы скопировались
+        ls -la public/canvaskit/
+    
     - name: Build
       run: npm run build
+    
+    # Проверяем, что CanvasKit файлы попали в dist
+    - name: Verify CanvasKit in dist
+      run: |
+        echo "Contents of dist/canvaskit:"
+        ls -la dist/canvaskit/ 2>/dev/null || echo "canvaskit folder not found in dist"
+        echo "Looking for canvaskit files in dist root:"
+        ls -la dist/canvaskit.* 2>/dev/null || echo "No canvaskit files in dist root"
     
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./dist
-        # Опционально: сохранить историю коммитов
         keep_files: false
