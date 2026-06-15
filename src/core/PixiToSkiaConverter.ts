@@ -15,7 +15,7 @@ export class PixiToSkiaConverter {
 
     try {
       this.canvasKit = await window.CanvasKitInit({
-        locateFile: (file: string) => "/canvaskit/" + file,
+        locateFile: (file: string) => window.location.pathname + "/canvaskit/" + file,
       });
       this.initRenderers();
     } catch (error) {

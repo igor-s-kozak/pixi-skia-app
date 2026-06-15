@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import path from "path";
 
 export default defineConfig({
+  base: '/pixi-skia-app/', 
   server: {
     port: 3000,
     open: true,

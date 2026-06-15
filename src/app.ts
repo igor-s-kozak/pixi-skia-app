@@ -12,6 +12,19 @@ import {
   consoleCSSGreen,
   consoleCSSRed,
 } from "./config";
+
+const formatDate = (date: Date) =>
+  [
+    date.getDate(),
+    date.getMonth() + 1,
+    String(date.getFullYear()).slice(-2),
+    date.getHours(),
+    date.getMinutes(),
+    date.getSeconds(),
+  ]
+    .map((v) => String(v).padStart(2, "0"))
+    .join("-");
+
 export class PixiSkiaApp {
   private pixiApp!: PIXI.Application;
   private converter: PixiToSkiaConverter | null = null;
@@ -224,7 +237,7 @@ export class PixiSkiaApp {
         this.pixiApp.stage,
         WIDTH,
         HEIGHT,
-        `skia-${new Date().toLocaleString()}.pdf`,
+        `skia-${formatDate(new Date())}.pdf`,
       );
 
       if (exportBtn) {
