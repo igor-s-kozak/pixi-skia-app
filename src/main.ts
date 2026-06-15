@@ -1,11 +1,11 @@
-import { PixiSkiaApp } from './app';
-import './styles.css';
+import { PixiSkiaApp } from "./app";
+import "./styles.css";
 
 // Функция для создания UI
 function createUI() {
-  const app = document.getElementById('app');
+  const app = document.getElementById("app");
   if (!app) return;
-  
+
   app.innerHTML = `
     <div class="app-container">
       <h1>🎨 Pixi.js + Skia PDF Renderer</h1>
@@ -40,10 +40,7 @@ function createUI() {
   `;
 }
 
-
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   createUI();
   new PixiSkiaApp();
 });
-
-
