@@ -17,7 +17,7 @@ const formatDate = (date: Date) =>
   /*
     Такой формат нужен, чтобы содержали символ "-" в качестве разделителя 
     и скачанные pdf адекватно открывались в браузере. 
-    Можно было бы вынести в отдельный файл uthils.ts, 
+    Можно было бы вынести в отдельный файл utils.ts, 
     но не стал ради одной утилиты
   */
   [
@@ -52,8 +52,9 @@ export class PixiSkiaApp {
       this.createTestScene();
       await this.initSkia();
       this.setupUI();
+      console.log("%cПриложение инициализировано успешно", consoleCSSRed);
     } catch (error) {
-      console.log("%c", consoleCSSRed); // нравится такое отображение в консоли
+      console.log("%cОшибка инициализации приложения", consoleCSSRed); // н; // нравится такое отображение в консоли
       console.error(error);
       this.updateStatus("Ошибка инициализации приложения");
     }
